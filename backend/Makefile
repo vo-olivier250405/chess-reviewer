@@ -7,13 +7,13 @@ build:
 	@if [ ! -d "$(STOCKFISH_DIR)" ]; then \
 		echo "Cloning Stockfish..."; \
 		git clone --depth=1 $(STOCKFISH_REPO) $(STOCKFISH_DIR); \
-		cd $(STOCKFISH_DIR)/src && make build ARCH=x86-64-modern
-		@echo "✅ Stockfish build terminé."
-		chmod +x $(STOCKFISH_BIN)
+		cd $(STOCKFISH_DIR)/src && make build ARCH=x86-64-modern; \
+		@echo "Build finished !"; \
+		chmod +x $(STOCKFISH_BIN);
 	fi
 
 run:
-	cd backend && bun run index.ts
+	cd backend && bun dev
 
 clean:
 	rm -rf $(STOCKFISH_DIR)
