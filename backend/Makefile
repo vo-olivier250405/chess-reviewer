@@ -9,7 +9,7 @@ build:
 		git clone --depth=1 $(STOCKFISH_REPO) $(STOCKFISH_DIR); \
 		cd $(STOCKFISH_DIR)/src && make build ARCH=x86-64-modern; \
 		@echo "Build finished !"; \
-		chmod +x $(STOCKFISH_BIN); \
+		chmod 777 $(STOCKFISH_BIN); \
 	fi
 
 run:
