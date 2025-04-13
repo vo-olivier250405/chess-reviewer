@@ -8,7 +8,7 @@ build:
 		echo "Cloning Stockfish..."; \
 		git clone --depth=1 $(STOCKFISH_REPO) $(STOCKFISH_DIR); \
 		cd $(STOCKFISH_DIR)/src && make build ARCH=x86-64-modern; \
-		@echo "Build finished !"; \
+		echo "Build finished !"; \
 	fi
 
 run:
