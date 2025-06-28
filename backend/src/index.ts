@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import apiRoute from "./routes/api";
+import apiRoute from "./routes";
 
 const app = new Hono();
 

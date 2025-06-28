@@ -26,7 +26,7 @@ interface Game {
         uuid: string
     };
     black: {
-         rating: number,
+        rating: number,
         result: GameStatut,
         "@id": string,
         username: string,

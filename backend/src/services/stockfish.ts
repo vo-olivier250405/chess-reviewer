@@ -1,57 +1,99 @@
-import { Chess } from "chess.js"
-import { createStockfishCli, extractEvalScore, formatEvaluation, getComment, isTheoreticalMove, normalizeFen } from "../lib/stockfish";
-import { AnalyzedMove } from "../types/Move";
-import openings from "../resssource/openings.json"
 
-const analyzePgn = async (pgn: string) => {
-    const chess = new Chess()
-    const replay = new Chess()
-    const analyzedMoves: AnalyzedMove[] = []
-    chess.loadPgn(pgn)
-    const history = chess.history({ verbose: true })
-    const { evaluatePosition, stop } = createStockfishCli()
+import path from 'path';
+import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
+import { Evaluation, StockfishLine } from '@/types/Evaluation';
 
-    let previousEval = 0
-
-    // const openingSet = new Set(openings.map((o: { name: string, fen: string }) => normalizeFen(o.fen)))
-    const openingSet = new Set(
-        openings.map((o: { name: string, fen: string }) => {
-            const norm = normalizeFen(o.fen)
-            if (o.name === "Queen's Gambit") {
-                console.log("fen: ", norm)
-            }
-            return norm
-        })
-    )
-    for (let i = 0; i < history.length; i++) {
-        const move = history[i]
-        replay.move(move)
-
-        const fen = replay.fen()
-        const evalText = await evaluatePosition(fen)
-        const evalResult = extractEvalScore(evalText)
-        if (!evalResult) continue
-        const cp = evalResult
-        const humanEval = formatEvaluation(evalResult)
-
-        const isTheoretical = isTheoreticalMove(fen, openingSet)
-        if (isTheoretical) {
-            console.log("Théorique !")
-        }
-        const comment = getComment(previousEval, cp.value, replay, isTheoretical)
-
-        analyzedMoves.push({
-            moveNumber: i + 1,
-            san: move.san,
-            fen,
-            evaluation: cp,
-            comment,
-            evalString: humanEval
-        })
-    }
-
-    stop()
-    return analyzedMoves
+export interface StockfishOptions {
+    depth: number;
+    multiPV?: number;
+    verbose?: boolean;
 }
 
-export { analyzePgn }
+class Stockfish {
+    private process: ChildProcessWithoutNullStreams;
+    private depth = 0;
+    private messages: string[] = [];
+
+    constructor(options?: StockfishOptions) {
+        const stockfishPath = path.join(__dirname, '../bin/stockfish/src/stockfish');
+        this.process = spawn(stockfishPath);
+
+        this.process.stdin.write('uci\n');
+        this.process.stdin.write(`setoption name MultiPV value ${options?.multiPV || 2}\n`);
+    }
+
+    public async evaluate(fen: string, options: StockfishOptions): Promise<StockfishLine[]> {
+        this.process.stdin.write(`position fen ${fen}\n`);
+        this.process.stdin.write(`go depth ${options.depth}\n`);
+
+        return new Promise((resolve, reject) => {
+            const lines: StockfishLine[] = [];
+
+            const onData = (data: Buffer) => {
+                const output = data.toString().trim();
+                const parts = output.split('\n');
+
+                for (const message of parts) {
+                    if (options.verbose) console.log(message);
+                    this.messages.unshift(message);
+
+                    const latestDepth = parseInt(message.match(/depth (\d+)/)?.[1] || '0');
+                    this.depth = Math.max(latestDepth, this.depth);
+
+                    if (message.startsWith('bestmove') || message.includes('depth 0')) {
+                        const searchMessages = this.messages.filter(msg => msg.startsWith('info depth'));
+
+                        for (const searchMessage of searchMessages) {
+                            const idString = searchMessage.match(/multipv (\d+)/)?.[1];
+                            const depthString = searchMessage.match(/depth (\d+)/)?.[1];
+                            const moveUCI = searchMessage.match(/ pv ([a-h1-8]+)/)?.[1];
+
+                            const evalMatch = searchMessage.match(/(cp|mate) (-?\d+)/);
+                            if (!idString || !depthString || !moveUCI || !evalMatch) continue;
+
+                            const evaluation: Evaluation = {
+                                type: evalMatch[1] as 'cp' | 'mate',
+                                value: parseInt(evalMatch[2])
+                            };
+
+                            if (fen.includes(' b ')) evaluation.value *= -1;
+
+                            const id = parseInt(idString);
+                            const depth = parseInt(depthString);
+
+                            if (depth !== options.depth || lines.some(line => line.id === id)) continue;
+
+                            lines.push({ id, depth, evaluation, moveUCI });
+                        }
+
+                        cleanup();
+                        resolve(lines);
+                    }
+                }
+            };
+
+            const onError = (err: Error) => {
+                cleanup();
+                reject(err);
+            };
+
+            const cleanup = () => {
+                this.process.stdout.off('data', onData);
+                this.process.stderr.off('data', onError);
+                this.process.stdin.write('quit\n');
+                this.process.kill();
+            };
+
+            this.process.stdout.on('data', onData);
+            this.process.stderr.on('data', onError);
+        });
+    }
+
+    public stop() {
+        this.process.stdin.write('stop\n');
+        this.process.stdin.write('quit\n');
+        this.process.kill();
+    }
+}
+
+export default Stockfish;
