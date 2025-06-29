@@ -15,11 +15,11 @@ const evaluate = async (
     let completed = 0;
     const total = positions.length;
 
+    const stockfish = new Stockfish();
     return new Promise((resolve) => {
         const tryLaunchNext = () => {
             while (activeWorkers < MAX_WORKERS && positions.length > 0) {
                 const position = positions.shift()!;
-                const stockfish = new Stockfish(options);
 
                 activeWorkers++;
 
@@ -27,7 +27,7 @@ const evaluate = async (
                     .then((lines) => {
                         evaluated.push({
                             ...position,
-                            topLines: lines,
+                            topLines: lines.sort((a, b) => a.id - b.id),
                         });
                     })
                     .catch((err) => {
@@ -54,6 +54,7 @@ const evaluate = async (
         };
 
         tryLaunchNext();
+        // stockfish.stop()
     });
 };
 

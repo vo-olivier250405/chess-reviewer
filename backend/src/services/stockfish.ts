@@ -1,4 +1,3 @@
-
 import path from 'path';
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 import { Evaluation, StockfishLine } from '@/types/Evaluation';
@@ -11,86 +10,104 @@ export interface StockfishOptions {
 
 class Stockfish {
     private process: ChildProcessWithoutNullStreams;
-    private depth = 0;
+    private busy = false;
+    private queue: (() => void)[] = [];
     private messages: string[] = [];
 
-    constructor(options?: StockfishOptions) {
+    constructor() {
         const stockfishPath = path.join(__dirname, '../bin/stockfish/src/stockfish');
         this.process = spawn(stockfishPath);
-
         this.process.stdin.write('uci\n');
-        this.process.stdin.write(`setoption name MultiPV value ${options?.multiPV || 2}\n`);
+    }
+
+    private setOptions(options: StockfishOptions) {
+        this.process.stdin.write(`setoption name MultiPV value ${options.multiPV || 2}\n`);
     }
 
     public async evaluate(fen: string, options: StockfishOptions): Promise<StockfishLine[]> {
-        this.process.stdin.write(`position fen ${fen}\n`);
-        this.process.stdin.write(`go depth ${options.depth}\n`);
-
         return new Promise((resolve, reject) => {
-            const lines: StockfishLine[] = [];
+            const task = async () => {
+                this.busy = true;
+                this.setOptions(options);
 
-            const onData = (data: Buffer) => {
-                const output = data.toString().trim();
-                const parts = output.split('\n');
+                this.process.stdin.write(`position fen ${fen}\n`);
+                this.process.stdin.write(`go depth ${options.depth}\n`);
 
-                for (const message of parts) {
-                    if (options.verbose) console.log(message);
-                    this.messages.unshift(message);
+                const lines: StockfishLine[] = [];
+                this.messages = [];
 
-                    const latestDepth = parseInt(message.match(/depth (\d+)/)?.[1] || '0');
-                    this.depth = Math.max(latestDepth, this.depth);
+                const onData = (data: Buffer) => {
+                    const output = data.toString().trim();
+                    const parts = output.split('\n');
 
-                    if (message.startsWith('bestmove') || message.includes('depth 0')) {
-                        const searchMessages = this.messages.filter(msg => msg.startsWith('info depth'));
+                    for (const message of parts) {
+                        if (options.verbose) console.log(message);
+                        this.messages.unshift(message);
 
-                        for (const searchMessage of searchMessages) {
-                            const idString = searchMessage.match(/multipv (\d+)/)?.[1];
-                            const depthString = searchMessage.match(/depth (\d+)/)?.[1];
-                            const moveUCI = searchMessage.match(/ pv ([a-h1-8]+)/)?.[1];
+                        if (message.startsWith('bestmove') || message.includes('depth 0')) {
+                            const searchMessages = this.messages.filter(msg => msg.startsWith('info depth'));
 
-                            const evalMatch = searchMessage.match(/(cp|mate) (-?\d+)/);
-                            if (!idString || !depthString || !moveUCI || !evalMatch) continue;
+                            for (const searchMessage of searchMessages) {
+                                const idString = searchMessage.match(/multipv (\d+)/)?.[1];
+                                const depthString = searchMessage.match(/depth (\d+)/)?.[1];
+                                const moveUCI = searchMessage.match(/ pv ([a-h1-8]+)/)?.[1];
 
-                            const evaluation: Evaluation = {
-                                type: evalMatch[1] as 'cp' | 'mate',
-                                value: parseInt(evalMatch[2])
-                            };
+                                const evalMatch = searchMessage.match(/(cp|mate) (-?\d+)/);
+                                if (!idString || !depthString || !moveUCI || !evalMatch) continue;
 
-                            if (fen.includes(' b ')) evaluation.value *= -1;
+                                const evaluation: Evaluation = {
+                                    type: evalMatch[1] as 'cp' | 'mate',
+                                    value: parseInt(evalMatch[2])
+                                };
 
-                            const id = parseInt(idString);
-                            const depth = parseInt(depthString);
+                                if (fen.includes(' b ')) evaluation.value *= -1;
 
-                            if (depth !== options.depth || lines.some(line => line.id === id)) continue;
+                                const id = parseInt(idString);
+                                const depth = parseInt(depthString);
 
-                            lines.push({ id, depth, evaluation, moveUCI });
+                                if (depth !== options.depth || lines.some(line => line.id === id)) continue;
+
+                                lines.push({ id, depth, evaluation, moveUCI });
+                            }
+
+                            cleanup();
+                            resolve(lines);
                         }
-
-                        cleanup();
-                        resolve(lines);
                     }
-                }
+                };
+
+                const onError = (err: Error) => {
+                    cleanup();
+                    reject(err);
+                };
+
+                const cleanup = () => {
+                    this.process.stdout.off('data', onData);
+                    this.process.stderr.off('data', onError);
+                    this.busy = false;
+                    this.runNext();
+                };
+
+                this.process.stdout.on('data', onData);
+                this.process.stderr.on('data', onError);
             };
 
-            const onError = (err: Error) => {
-                cleanup();
-                reject(err);
-            };
-
-            const cleanup = () => {
-                this.process.stdout.off('data', onData);
-                this.process.stderr.off('data', onError);
-                this.process.stdin.write('quit\n');
-                this.process.kill();
-            };
-
-            this.process.stdout.on('data', onData);
-            this.process.stderr.on('data', onError);
+            if (!this.busy) {
+                task();
+            } else {
+                this.queue.push(task);
+            }
         });
     }
 
+    private runNext() {
+        if (this.queue.length > 0 && !this.busy) {
+            const next = this.queue.shift();
+            if (next) next();
+        }
+    }
+
     public stop() {
-        this.process.stdin.write('stop\n');
         this.process.stdin.write('quit\n');
         this.process.kill();
     }
