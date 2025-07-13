@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { getUserGames } from "@/services/chesscom";
 import { parsePgn } from "@/lib/chess";
 import evaluate from "@/lib/evaluate";
+import analyse from "@/lib/analysis";
 
 const apiRoute = new Hono();
 
@@ -18,15 +19,16 @@ apiRoute.post("/analyze/", async (c) => {
     const { pgn } = await c.req.json();
     const parsedPgn = await parsePgn(pgn);
     const evaluatedPositions = await evaluate(parsedPgn, {
-        depth: 20,
+        depth: 16,
         multiPV: 2,
     }, (_, message) => {
         console.clear()
         console.log(`Progress: ${message}`);
     });
+    const analyzedPositions = await analyse(evaluatedPositions)
     // const evaluated = await evaluate(playablePositions as AnalyzedPosition[], 16);
     // const analyzedMoves = await analyse(evaluated);
-    return c.json({ evaluatedPositions }, 200);
+    return c.json({ analyzedPositions }, 200);
 });
 
 export default apiRoute;

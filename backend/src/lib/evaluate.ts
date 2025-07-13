@@ -20,7 +20,6 @@ const evaluate = async (
         const tryLaunchNext = () => {
             while (activeWorkers < MAX_WORKERS && positions.length > 0) {
                 const position = positions.shift()!;
-
                 activeWorkers++;
 
                 const task = stockfish.evaluate(position.fen, options)

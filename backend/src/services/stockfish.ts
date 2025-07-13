@@ -43,7 +43,6 @@ class Stockfish {
                     for (const message of parts) {
                         if (options.verbose) console.log(message);
                         this.messages.unshift(message);
-
                         if (message.startsWith('bestmove') || message.includes('depth 0')) {
                             const searchMessages = this.messages.filter(msg => msg.startsWith('info depth'));
 
@@ -103,7 +102,7 @@ class Stockfish {
     private runNext() {
         if (this.queue.length > 0 && !this.busy) {
             const next = this.queue.shift();
-            if (next) next();
+            next?.();
         }
     }
 

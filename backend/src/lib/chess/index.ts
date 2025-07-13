@@ -1,3 +1,4 @@
 import parsePgn from "./parse";
+import getMoveClassification from "./classification";
 
-export { parsePgn };
+export { parsePgn, getMoveClassification };

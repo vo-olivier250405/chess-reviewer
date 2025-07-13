@@ -1,5 +1,6 @@
 import { PieceSymbol } from "chess.js"
 import openings from "../resssource/openings.json"
+import { ClassificationWithScore } from "@/types/Classification";
 
 export const OPENINGS = openings
 
@@ -15,7 +16,7 @@ export const PIECE_VALUES: Record<PieceSymbol, number> = {
 
 export const PROMOTIONS = [undefined, "b", "n", "r", "q"];
 
-export const CATEGORIES = {
+export const CLASSIFICATIONS: ClassificationWithScore = {
     blunder: 0,
     mistake: 0.2,
     inaccuracy: 0.4,

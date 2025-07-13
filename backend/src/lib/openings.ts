@@ -1,8 +1,4 @@
-import { OPENINGS } from "../constants";
+import { OPENINGS } from "@/constants";
+import { Opening } from "@/types/Position";
 
-interface Opening {
-    name: string;
-    fen: string;
-}
-
-export const getOpeningByFen = (fen: string): Opening | undefined => OPENINGS.find(opening => opening.fen.includes(fen))
+export const getOpeningByFen = (fen: string): Opening | undefined => OPENINGS.find((opening) => fen.includes(opening.fen))
