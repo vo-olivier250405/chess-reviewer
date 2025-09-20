@@ -19,3 +19,5 @@ export interface EvaluatedPosition extends Position {
     opening?: Opening
     classification?: Classification
 }
+
+export type MoveColor = 'white' | 'black';

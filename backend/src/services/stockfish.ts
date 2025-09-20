@@ -18,6 +18,9 @@ class Stockfish {
         const stockfishPath = path.join(__dirname, '../bin/stockfish/src/stockfish');
         this.process = spawn(stockfishPath);
         this.process.stdin.write('uci\n');
+        this.process.stdin.write('ucinewgame\n');
+        this.process.stdin.write('isready\n');
+        
     }
 
     private setOptions(options: StockfishOptions) {
