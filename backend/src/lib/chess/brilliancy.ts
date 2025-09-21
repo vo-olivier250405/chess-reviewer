@@ -17,10 +17,12 @@ export const getMoveIsBrilliant = (
     (secondEvaluation >= 700 && topMove.evaluation.type === "cp") ||
     (topMove.evaluation.type === "mate" &&
       secondTopMove.evaluation.type === "mate");
+  // console.log(isWinningAnyways, currentPosition.move.san);
+
   if (
     currentEvaluation >= 0 &&
     !isWinningAnyways &&
-    currentPosition.move.san.includes("=")
+    !currentPosition.move.san.includes("=")
   ) {
     const lastBoard = new Chess(lastPosition.fen);
     const currentBoard = new Chess(currentPosition.fen);
@@ -42,9 +44,14 @@ export const getMoveIsBrilliant = (
         )
           continue;
 
-        if (
-          isPieceHanging(lastPosition.fen, currentPosition.fen, piece.square)
-        ) {
+        const isPieceIsHanging = isPieceHanging(
+          lastPosition.fen,
+          currentPosition.fen,
+          piece.square
+        );
+
+        if (isPieceIsHanging) {
+          console.log(currentPosition.move.san, lastPosition.move?.san);
           currentPosition.classification = "brilliant";
           sacrificedPieces.push(piece);
         }

@@ -2,6 +2,7 @@ import { CLASSIFICATIONS } from "@/constants";
 import { getMoveClassification } from "./chess";
 import { EvaluatedPosition } from "@/types/Position";
 import { Chess } from "chess.js";
+import { Classification } from "@/types/Classification";
 
 const analyze = async (positions: EvaluatedPosition[]) => {
   const analyzedPositions: EvaluatedPosition[] = [];
@@ -29,7 +30,10 @@ const analyze = async (positions: EvaluatedPosition[]) => {
     },
   };
 
-  const REPORT_CLASSIFICATIONS = {
+  const REPORT_CLASSIFICATIONS: {
+    white: Record<Classification, number>;
+    black: Record<Classification, number>;
+  } = {
     white: {
       brilliant: 0,
       great: 0,
@@ -39,7 +43,6 @@ const analyze = async (positions: EvaluatedPosition[]) => {
       inaccuracy: 0,
       mistake: 0,
       blunder: 0,
-      book: 0,
       forced: 0,
       theoretical: 0,
     },
@@ -52,7 +55,6 @@ const analyze = async (positions: EvaluatedPosition[]) => {
       inaccuracy: 0,
       mistake: 0,
       blunder: 0,
-      book: 0,
       forced: 0,
       theoretical: 0,
     },

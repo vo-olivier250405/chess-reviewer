@@ -178,7 +178,5 @@ const getMoveClassification = (
   return currentPosition;
 };
 
-export const getReportClassification = (positions: EvaluatedPosition[]) => {
-    
-}
+export const getReportClassification = (positions: EvaluatedPosition[]) => {};
 export default getMoveClassification;

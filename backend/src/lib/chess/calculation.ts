@@ -18,6 +18,7 @@ export const calculateEvalLoss = (
   const matchingTopLine = lastPosition.topLines?.find(
     (l) => l.moveUCI == currentPosition.move.uci
   );
+
   if (matchingTopLine) {
     if (moveColor === "white") {
       lastMoveEvalLoss = lastMoveEval.value - matchingTopLine.evaluation.value;
@@ -32,9 +33,6 @@ export const calculateEvalLoss = (
   }
 
   evalLoss = Math.min(evalLoss, lastMoveEvalLoss);
-  console.log(
-    `Eval loss: ${evalLoss}, Current position uci: ${currentPosition.move.uci}, Last position uci: ${lastPosition.move.uci}`
-  );
 
   return evalLoss;
 };

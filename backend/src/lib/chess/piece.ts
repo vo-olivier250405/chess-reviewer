@@ -153,7 +153,7 @@ export function isPieceHanging(lastFen: string, fen: string, square: Square) {
   let defenders = getDefenders(fen, square);
 
   if (
-    pieceValues[lastPiece.type] >= pieceValues[piece!.type] &&
+    pieceValues[lastPiece?.type] >= pieceValues[piece!.type] &&
     lastPiece.color != piece!.color
   ) {
     return false;
@@ -161,7 +161,7 @@ export function isPieceHanging(lastFen: string, fen: string, square: Square) {
 
   if (
     piece!.type == "r" &&
-    pieceValues[lastPiece.type] == 3 &&
+    pieceValues[lastPiece?.type] == 3 &&
     attackers.every(
       (atk) => pieceValues[atk.type as keyof typeof pieceValues] == 3
     ) &&
