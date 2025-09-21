@@ -1,3 +1,4 @@
+import Piece from "@/components/Piece";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -5,5 +6,9 @@ export const Route = createFileRoute("/")({
 });
 
 function App() {
-  return <div>Hello from the Chess Review</div>;
+  return (
+    <div>
+      <Piece piece={{ color: "b", piece: "k" }} />
+    </div>
+  );
 }
