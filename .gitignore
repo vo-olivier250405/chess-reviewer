@@ -5,3 +5,7 @@ node_modules/
 
 postgres-data/
 docker/
+
+__pycache__/
+*.pyc
+*.env

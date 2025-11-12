@@ -1,5 +1,21 @@
 services:
+  api:
+    container_name: cr_api
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - backend/.env
+    volumes:
+      - ./backend:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+    networks:
+      - app
   postgres:
+    container_name: cr_db
     image: postgres:latest
     env_file:
       - backend/.env
