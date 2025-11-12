@@ -3,8 +3,15 @@ import { Outlet, createRootRoute } from "@tanstack/react-router";
 export const Route = createRootRoute({
   component: () => (
     <>
-      <Outlet />
-      {/* <TanstackDevtools
+      <OutletWrapper />
+    </>
+  ),
+});
+
+export const OutletWrapper = () => (
+  <>
+    <Outlet />
+    {/* <TanstackDevtools
         config={{
           position: 'bottom-left',
         }}
@@ -15,6 +22,5 @@ export const Route = createRootRoute({
           },
         ]}
       /> */}
-    </>
-  ),
-});
+  </>
+);
