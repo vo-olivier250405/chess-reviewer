@@ -1,1 +1,1 @@
-from login_view import LoginView, LogoutView
+from .login_view import LoginView, LogoutView
