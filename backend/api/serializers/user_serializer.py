@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from knox.models import AuthToken
 from api.models import User
 
 
@@ -9,9 +10,18 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
+    token = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = User
-        fields = ["username", "email", "password"]
+        fields = [
+            "id",
+            "username",
+            "email",
+            "password",
+            "token",
+        ]
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -20,3 +30,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             password=validated_data["password"],
         )
         return user
+
+    def get_token(self, obj):
+        _, token = AuthToken.objects.create(obj)
+        return token
