@@ -4,4 +4,5 @@ from .game_serializer import (
     BaseGameSerializer,
     LiteGameSerializer,
     GameCreateSerializer,
+    AnalyzeGameSerializer,
 )

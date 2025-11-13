@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from api.serializers import BaseSerializer, UserSerializer
 from api.models import Game
 from api.validators import (
@@ -49,3 +50,11 @@ class GameCreateSerializer(BaseGameSerializer):
             validate_positions(positions)
 
         return super().validate(attrs)
+
+
+class AnalyzeGameSerializer(BaseSerializer):
+    name = serializers.CharField(required=True)
+    pgn = serializers.CharField(required=True)
+
+    class Meta:
+        fields = ["name", "pgn"]
