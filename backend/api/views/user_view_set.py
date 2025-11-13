@@ -1,19 +1,13 @@
-from knox.auth import TokenAuthentication
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
 from api.models import User
 from api.serializers import UserSerializer, UserCreateSerializer
-from api.views import BaseViewSetPagination
+from api.views import BaseViewSet
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    pagination_class = BaseViewSetPagination
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+class UserViewSet(BaseViewSet):
 
     def get_serializer_class(self):
         if self.action in ["create", "register"]:

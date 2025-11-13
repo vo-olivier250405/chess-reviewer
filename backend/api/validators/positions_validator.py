@@ -33,11 +33,11 @@ def validate_positions(value):
                 if (
                     "id" not in line
                     or "depth" not in line
-                    or "moveSAN" not in line
+                    or "moveUCI" not in line
                     or "evaluation" not in line
                 ):
                     raise ValidationError(
-                        f"Each topLine must contain 'id', 'depth', 'evaluation', and 'moveSAN' keys (error at index {index}, line {line_index})"
+                        f"Each topLine must contain 'id', 'depth', 'evaluation', and 'moveUCI' keys (error at index {index}, line {line_index})"
                     )
 
                 evaluation = line["evaluation"]
@@ -51,7 +51,7 @@ def validate_positions(value):
                     )
                 if evaluation["type"] not in ["cp", "mate"]:
                     raise ValidationError(
-                        f"'evaluation.type' must be either 'cp' or 'mate' (error at index {index}, line {line_index})"
+                        f"'evaluation.type' must be either 'cp' or 'mate' get \"{evaluation['type']}\" (error at index {index}, line {line_index})"
                     )
                 if not isinstance(evaluation["value"], int):
                     raise ValidationError(
@@ -73,9 +73,9 @@ def validate_positions(value):
                 raise ValidationError(
                     f"'classification' must be a string (error at index {index})"
                 )
-            if not classification not in CLASSIFICATION_TYPES:
+            if classification not in CLASSIFICATION_TYPES:
                 raise ValidationError(
-                    f"'classification' must be one of {CLASSIFICATION_TYPES} (error at index {index})"
+                    f"'classification' must be one of {CLASSIFICATION_TYPES} but get \"{classification}\" (error at index {index})"
                 )
 
     return value
