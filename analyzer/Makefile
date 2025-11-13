@@ -12,7 +12,7 @@ build:
 	fi
 
 run:
-	cd backend && bun dev
+	cd analyzer && bun dev
 
 clean:
 	rm -rf $(STOCKFISH_DIR)
