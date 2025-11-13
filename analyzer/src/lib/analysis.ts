@@ -3,8 +3,11 @@ import { getMoveClassification } from "./chess";
 import { EvaluatedPosition } from "@/types/Position";
 import { Chess } from "chess.js";
 import { Classification } from "@/types/Classification";
+import { AnalyzedGame } from "@/types/Game";
 
-const analyze = async (positions: EvaluatedPosition[]) => {
+const analyze = async (
+  positions: EvaluatedPosition[]
+): Promise<AnalyzedGame> => {
   const analyzedPositions: EvaluatedPosition[] = [];
   let positionIndex = 0;
   for (let position of positions.slice(1)) {
