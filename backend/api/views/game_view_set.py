@@ -1,8 +1,9 @@
 from api.models import Game
 from api.views import BaseViewSet
 from api.serializers import (
-    GameSerializer,
+    LiteGameSerializer,
     GameCreateSerializer,
+    BaseGameSerializer,
 )
 
 
@@ -11,7 +12,9 @@ class GameViewSet(BaseViewSet):
     def get_serializer_class(self):
         if self.action in ["create"]:
             return GameCreateSerializer
-        return GameSerializer
+        elif self.action in ["list"]:
+            return LiteGameSerializer
+        return BaseGameSerializer
 
     def get_queryset(self):
         if self.user:

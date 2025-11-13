@@ -1,4 +1,4 @@
-from api.serializers import BaseSerializer
+from api.serializers import BaseSerializer, UserSerializer
 from api.models import Game
 from api.validators import (
     validate_classifications,
@@ -7,13 +7,34 @@ from api.validators import (
 )
 
 
-class GameSerializer(BaseSerializer):
+class BaseGameSerializer(BaseSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = Game
-        fields = "__all__"
+        fields = [
+            "id",
+            "name",
+            "user",
+            "accuracies",
+            "classifications",
+            "positions",
+        ]
 
 
-class GameCreateSerializer(GameSerializer):
+class LiteGameSerializer(BaseGameSerializer):
+
+    class Meta:
+        model = Game
+        fields = [
+            "id",
+            "name",
+            "user",
+            "accuracies",
+        ]
+
+
+class GameCreateSerializer(BaseGameSerializer):
 
     def validate(self, attrs):
         classifications = attrs.get("classifications")

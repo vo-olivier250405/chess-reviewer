@@ -15,6 +15,7 @@ class Game(models.Model):
         editable=False,
         unique=True,
     )
+    name = models.CharField(max_length=255, null=False, blank=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -35,3 +36,9 @@ class Game(models.Model):
         blank=False,
         validators=[validate_positions],
     )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
