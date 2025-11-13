@@ -1,15 +1,16 @@
 from rest_framework import serializers
+from api.serializers import BaseSerializer
 from knox.models import AuthToken
 from api.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(BaseSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "email"]
 
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class UserCreateSerializer(UserSerializer):
     token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
