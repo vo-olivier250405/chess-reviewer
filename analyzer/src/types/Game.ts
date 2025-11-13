@@ -1,3 +1,4 @@
+import { Classification } from "./Classification";
 import { EvaluatedPosition } from "./Position";
 
 type GameStatut =
@@ -61,8 +62,8 @@ interface AnalyzedGame {
     black: number;
   };
   classifications: {
-    white: Record<string, number>;
-    black: Record<string, number>;
+    white: Record<Classification, number>;
+    black: Record<Classification, number>;
   };
   positions: EvaluatedPosition[];
 }
