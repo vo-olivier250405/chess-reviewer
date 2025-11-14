@@ -13,8 +13,23 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+      - analyzer
     networks:
       - app
+
+  analyzer:
+    container_name: cr_analyzer
+    build:
+      context: ./analyzer
+      dockerfile: Dockerfile
+    volumes:
+      - ./analyzer:/app
+      - /app/src/bin/stockfish # Avoid overwriting the compiled Stockfish binary
+    ports:
+      - 3000:3000
+    networks:
+      - app
+    restart: unless-stopped
 
   celery:
     container_name: cr_celery
@@ -29,6 +44,7 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+      - analyzer
     networks:
       - app
     restart: unless-stopped
