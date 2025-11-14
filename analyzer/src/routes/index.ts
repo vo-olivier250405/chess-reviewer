@@ -3,6 +3,7 @@ import { getUserGames } from "@/services/chesscom";
 import { parsePgn } from "@/lib/chess";
 import evaluate from "@/lib/evaluate";
 import analyze from "@/lib/analysis";
+import { authMiddleware } from "@/middlewares/auth";
 
 const apiRoute = new Hono();
 
@@ -17,7 +18,7 @@ apiRoute.get("/get-user-games", async (c) => {
   return c.json(games);
 });
 
-apiRoute.post("/analyze/", async (c) => {
+apiRoute.post("/analyze/", authMiddleware, async (c) => {
   const { pgn } = await c.req.json();
   const parsedPgn = await parsePgn(pgn);
   const evaluatedPositions = await evaluate(

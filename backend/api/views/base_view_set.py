@@ -25,3 +25,15 @@ class BaseViewSet(ModelViewSet):
         queryset = super().get_queryset()
 
         return queryset
+
+    def get_user_token(self) -> str | None:
+        request = self.request
+
+        if hasattr(request, "auth") and request.auth:
+            return str(request.auth)
+        elif "HTTP_AUTHORIZATION" in request.META:
+            auth_header = request.META["HTTP_AUTHORIZATION"]
+            if auth_header.startswith("Token "):
+                return auth_header[6:]
+
+        return None

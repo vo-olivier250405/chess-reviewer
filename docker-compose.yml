@@ -22,6 +22,8 @@ services:
     build:
       context: ./analyzer
       dockerfile: Dockerfile
+    env_file:
+      - analyzer/.env
     volumes:
       - ./analyzer:/app
       - /app/src/bin/stockfish # Avoid overwriting the compiled Stockfish binary

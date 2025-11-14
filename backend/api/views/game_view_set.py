@@ -32,6 +32,7 @@ class GameViewSet(BaseViewSet):
     @action(detail=False, methods=["post"])
     def analyze(self, request):
         analyzer_api_url = environ.get("ANALYZER_API_URL")
+
         if not analyzer_api_url:
             return Response(
                 {"error": "Analyzer API URL is not configured."},
@@ -40,14 +41,16 @@ class GameViewSet(BaseViewSet):
 
         pgn = request.data.get("pgn", "")
         name = request.data.get("name", "Untitled Game")
+        analyzer_api_token = environ.get("ANALYZER_API_TOKEN", "")
 
         analyze_pgn.delay(
-            user=self.user.id,
+            user_id=str(self.user.id),
+            token=analyzer_api_token,
             analyzer_api_url=analyzer_api_url,
             pgn=pgn,
             name=name,
         )
         return Response(
-            "Your game analysis is in progress.",
+            {"message": "Your game analysis is in progress."},
             status=status.HTTP_202_ACCEPTED,
         )
