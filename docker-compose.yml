@@ -12,8 +12,40 @@ services:
       - 8000:8000
     depends_on:
       - postgres
+      - rabbitmq
     networks:
       - app
+
+  celery:
+    container_name: cr_celery
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: celery -A app worker -l info
+    env_file:
+      - backend/.env
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - app
+    restart: unless-stopped
+
+  rabbitmq:
+    container_name: cr_rabbitmq
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - app
+    restart: unless-stopped
+
   postgres:
     container_name: cr_db
     image: postgres:latest

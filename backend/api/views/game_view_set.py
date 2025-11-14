@@ -6,10 +6,11 @@ from api.serializers import (
     BaseGameSerializer,
     AnalyzeGameSerializer,
 )
-from rest_framework.decorators import action
+from api.tasks import analyze_pgn
 from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import action
 from os import environ
-from requests import post
 
 
 class GameViewSet(BaseViewSet):
@@ -39,25 +40,14 @@ class GameViewSet(BaseViewSet):
 
         pgn = request.data.get("pgn", "")
         name = request.data.get("name", "Untitled Game")
-        try:
-            response = post(
-                f"{analyzer_api_url}/analyze/",
-                json={"pgn": pgn},
-            )
-            response.raise_for_status()
-        except Exception as e:
-            return Response(
-                {"error": f"Failed to connect to Analyzer API: {str(e)}"},
-                status=502,
-            )
 
-        data = response.json()
-        analyzed_game = data.get("analyzedPositions", {})
-        Game.objects.create(
+        analyze_pgn.delay(
+            user=self.user.id,
+            analyzer_api_url=analyzer_api_url,
+            pgn=pgn,
             name=name,
-            user=self.user,
-            accuracies=analyzed_game.get("accuracies", {}),
-            classifications=analyzed_game.get("classifications", {}),
-            positions=analyzed_game.get("positions", {}),
         )
-        return Response(analyzed_game, status=response.status_code)
+        return Response(
+            "Your game analysis is in progress.",
+            status=status.HTTP_202_ACCEPTED,
+        )

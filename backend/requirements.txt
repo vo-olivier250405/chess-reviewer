@@ -29,3 +29,9 @@ cryptography
 
 # Testing
 django-silk
+
+
+# Queue and Task Management
+celery
+rabbitmq
+django-celery-beat
