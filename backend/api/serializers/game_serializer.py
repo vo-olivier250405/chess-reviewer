@@ -52,9 +52,6 @@ class GameCreateSerializer(BaseGameSerializer):
         return super().validate(attrs)
 
 
-class AnalyzeGameSerializer(BaseSerializer):
+class AnalyzeGameSerializer(serializers.Serializer):
     name = serializers.CharField(required=True)
     pgn = serializers.CharField(required=True)
-
-    class Meta:
-        fields = ["name", "pgn"]

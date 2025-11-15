@@ -39,8 +39,11 @@ class GameViewSet(BaseViewSet):
                 status=500,
             )
 
-        pgn = request.data.get("pgn", "")
-        name = request.data.get("name", "Untitled Game")
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        pgn = serializer.validated_data.get("pgn")
+        name = serializer.validated_data.get("name")
         analyzer_api_token = environ.get("ANALYZER_API_TOKEN", "")
 
         analyze_pgn.delay(
