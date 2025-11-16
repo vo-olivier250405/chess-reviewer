@@ -237,3 +237,25 @@ ANALYZER_API_URL=http://127.0.0.1:3000
 ```sh
 celery -A app worker -l info
 ```
+
+## Databases Backup
+
+Those scripts allow you to manipulate the database in your container. Make sure that the `cr_api` and the `cr_db` are up and running.
+
+### Save
+
+You can save a dump of your database by running this following [script](/scripts/backup_db.sh):
+
+```sh
+./scripts/backup_db.sh
+```
+
+It will create a dump in the [backup](/backups/) folder, and if this folder is inexistant, it will create a new one.
+
+### Clean and Load
+
+You can also clean the database and load a new database with one of your `SQL` file by using this [script](./scripts/clean_load_db.sh):
+
+```sh
+./scripts/clean_load_db.sh ./path/to/your/sql-file.sql
+```
