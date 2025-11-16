@@ -9,3 +9,7 @@ docker/
 __pycache__/
 *.pyc
 *.env
+
+backups/
+.DS_Store
+*.sql
