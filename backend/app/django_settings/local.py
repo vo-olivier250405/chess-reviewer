@@ -1,0 +1,10 @@
+from app.django_settings.common import *
+
+SEND_MAIL = True
+DEBUG = True
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "[::1]",
+]
