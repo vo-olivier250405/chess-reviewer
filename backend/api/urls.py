@@ -5,6 +5,7 @@ from api.views import (
     LoginView,
     UserViewSet,
     GameViewSet,
+    NotificationViewSet,
 )
 
 
@@ -12,6 +13,7 @@ router = DefaultRouter()
 
 router.register(r"users", UserViewSet, basename="user")
 router.register(r"games", GameViewSet, basename="game")
+router.register(r"notifications", NotificationViewSet, basename="notification")
 
 urlpatterns = [
     path("", include(router.urls)),

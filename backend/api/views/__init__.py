@@ -4,3 +4,5 @@ from .login_view import LoginView, LogoutView
 
 from .user_view_set import UserViewSet
 from .game_view_set import GameViewSet
+
+from .notification_view_set import NotificationViewSet
