@@ -12,6 +12,12 @@ def analyze_pgn(
 ) -> None:
     from api.models import Game, User
     from requests import post
+    from api.utils.notification import (
+        create_error_notification,
+        create_game_analyzed_notification,
+    )
+
+    user = User.objects.get(id=user_id)
 
     if analyzer_api_url:
         try:
@@ -28,19 +34,27 @@ def analyze_pgn(
             response.raise_for_status()
         except Exception as e:
             logging.error(f"Failed to connect to Analyzer API: {str(e)}")
+            create_error_notification(user=user, error=e)
             return
 
         data = response.json()
         analyzed_game = data.get("analyzedPositions", {})
 
         try:
-            user = User.objects.get(id=user_id)
-            Game.objects.create(
+            created_game = Game.objects.create(
                 name=name,
                 user=user,
                 accuracies=analyzed_game.get("accuracies", {}),
                 classifications=analyzed_game.get("classifications", {}),
                 positions=analyzed_game.get("positions", {}),
             )
+            create_game_analyzed_notification(
+                user=user,
+                game=created_game,
+            )
         except User.DoesNotExist:
             logging.error(f"User with id {user_id} does not exist")
+            create_error_notification(
+                user=None,
+                error=Exception(f"User with id {user_id} does not exist"),
+            )

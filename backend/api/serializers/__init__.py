@@ -6,3 +6,7 @@ from .game_serializer import (
     GameCreateSerializer,
     AnalyzeGameSerializer,
 )
+from .notification_serializer import (
+    NotificationSerializer,
+    NotificationUpdateSerializer,
+)
