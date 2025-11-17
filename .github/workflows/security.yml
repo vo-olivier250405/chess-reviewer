@@ -28,8 +28,11 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
 
-      - name: Install OSV-Scanner
-        uses: google/osv-scanner-action@v1
+      - name: OSV-Scanner (PR scan)
+        uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@v2.1.0"
+        with:
+          scan-args: |
+            --lockfile=bun.lockb
 
       - name: Audit JS dependencies
         working-directory: frontend
