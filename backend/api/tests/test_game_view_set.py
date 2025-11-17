@@ -69,8 +69,6 @@ class TestGameAPI:
             "positions": self.mock_positions[:2],
         }
 
-        print(data)
-
         response = self.client.post(
             self.games_url, data, format="json", **self.auth_header
         )
