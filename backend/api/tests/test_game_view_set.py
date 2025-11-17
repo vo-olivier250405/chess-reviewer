@@ -39,34 +39,34 @@ class TestGameAPI:
         }
 
 
-def test_should_create_game(self):
-    data = {
-        "name": "My Game",
-        "accuracies": self.mock_accuracies,
-        "classifications": self.mock_classifications,
-        "positions": self.mock_positions[:2],
-    }
+    def test_should_create_game(self):
+        data = {
+            "name": "My Game",
+            "accuracies": self.mock_accuracies,
+            "classifications": self.mock_classifications,
+            "positions": self.mock_positions[:2],
+        }
 
-    response = self.client.post(self.games_url, data, format="json")
+        response = self.client.post(self.games_url, data, format="json")
 
-    assert response.status_code == 201
-    assert Game.objects.count() == 1
-    assert Game.objects.first().name == "My Game"
-    assert Game.objects.first().user == self.user
+        assert response.status_code == 201
+        assert Game.objects.count() == 1
+        assert Game.objects.first().name == "My Game"
+        assert Game.objects.first().user == self.user
 
 
-@patch("api.tasks.analyze_pgn.delay")
-def test_should_reject_analysis_when_env_missing(self, mock_delay, settings):
-    settings.ANALYZER_API_TOKEN = None
-    game_count_before = Game.objects.count()
-    user_notifications_before = self.user.notifications.count()
-    data = {"pgn": "1. e4 e5", "name": "Broken"}
+    @patch("api.tasks.analyze_pgn.delay")
+    def test_should_reject_analysis_when_env_missing(self, mock_delay, settings):
+        settings.ANALYZER_API_TOKEN = None
+        game_count_before = Game.objects.count()
+        user_notifications_before = self.user.notifications.count()
+        data = {"pgn": "1. e4 e5", "name": "Broken"}
 
-    response = self.client.post(self.analyze_url, data, format="json")
-    game_count_after = Game.objects.count()
-    user_notifications_after = self.user.notifications.count()
+        response = self.client.post(self.analyze_url, data, format="json")
+        game_count_after = Game.objects.count()
+        user_notifications_after = self.user.notifications.count()
 
-    assert response.status_code == 500
-    assert game_count_before == game_count_after
-    assert user_notifications_before == user_notifications_after
-    mock_delay.assert_not_called()
+        assert response.status_code == 500
+        assert game_count_before == game_count_after
+        assert user_notifications_before == user_notifications_after
+        mock_delay.assert_not_called()
