@@ -1,0 +1,54 @@
+name: Security Scans
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      #  Python dependency audit
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Audit Python dependencies
+        run: pip-audit
+        continue-on-error: false
+
+      # Node / Bun vulnerability scan
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Audit JS dependencies
+        working-directory: frontend
+        run: |
+          bun install
+          npx osv-scanner --lockfile=package-lock.json
+        continue-on-error: false
+
+      # Secret detection
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          fail: true
+
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@v3
+
+      - name: Build Docker images
+        run: docker build -t cr_api ./backend
+
+      - name: Scan Docker image for vulnerabilities
+        run: trivy image --exit-code 1 --severity HIGH,CRITICAL cr_api
+        continue-on-error: false
