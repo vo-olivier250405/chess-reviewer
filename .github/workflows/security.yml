@@ -18,10 +18,10 @@ jobs:
 
       #  Python dependency audit
       - name: Install pip-audit
-        run: pip-audit -r backend/requirements.txt
+        run: pip install pip-audit
 
       - name: Audit Python dependencies
-        run: pip-audit
+        run: pip-audit -r backend/requirements.txt
         continue-on-error: false
 
       # Node / Bun vulnerability scan
