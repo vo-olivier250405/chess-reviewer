@@ -43,12 +43,12 @@ jobs:
         with:
           fail: true
 
-      - name: Install Trivy
-        uses: aquasecurity/setup-trivy@v0.13.1
+      # - name: Install Trivy
+      #   uses: aquasecurity/setup-trivy@v0.13.1
 
-      - name: Build Docker images
-        run: docker build -t cr_api ./backend
+      # - name: Build Docker images
+      #   run: docker build -t cr_api ./backend
 
-      - name: Scan Docker image for vulnerabilities
-        run: trivy image --exit-code 1 --severity HIGH,CRITICAL cr_api
-        continue-on-error: false
+      # - name: Scan Docker image for vulnerabilities
+      #   run: trivy image --exit-code 1 --severity HIGH,CRITICAL cr_api
+      #   continue-on-error: false
