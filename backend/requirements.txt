@@ -29,6 +29,8 @@ cryptography
 
 # Testing
 django-silk
+pytest
+pytest-django
 
 
 # Queue and Task Management
