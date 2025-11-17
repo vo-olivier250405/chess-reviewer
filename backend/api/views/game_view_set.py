@@ -31,15 +31,15 @@ class GameViewSet(BaseViewSet):
 
     @action(detail=False, methods=["post"])
     def analyze(self, request):
-        analyzer_api_url = environ.get("ANALYZER_API_URL", None)
-        analyzer_api_token = environ.get("ANALYZER_API_TOKEN", None)
+        analyzer_api_url = environ.get("ANALYZER_API_URL", "")
+        analyzer_api_token = environ.get("ANALYZER_API_TOKEN", "")
 
-        if None in (analyzer_api_url, analyzer_api_token):
+        if "" in (analyzer_api_url, analyzer_api_token):
             return Response(
                 {
                     "error": (
                         "Analyzer API URL is not configured."
-                        if analyzer_api_url is None
+                        if analyzer_api_url == ""
                         else "Analyzer API token is not configured."
                     )
                 },

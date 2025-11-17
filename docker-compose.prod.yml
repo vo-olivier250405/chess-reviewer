@@ -1,0 +1,100 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: cr_api
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - backend/.env
+    command: >
+      sh -c "
+      python manage.py migrate --noinput &&
+      python manage.py collectstatic --noinput &&
+      gunicorn app.wsgi:application --bind 0.0.0.0:8000
+      "
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      analyzer:
+        condition: service_started
+    networks:
+      - app
+    restart: unless-stopped
+
+  analyzer:
+    container_name: cr_analyzer
+    build:
+      context: ./analyzer
+      dockerfile: Dockerfile
+    env_file:
+      - analyzer/.env
+    ports:
+      - "3000:3000"
+    networks:
+      - app
+    restart: unless-stopped
+
+  celery:
+    container_name: cr_celery
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: celery -A app worker -l info
+    env_file:
+      - backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      analyzer:
+        condition: service_started
+    networks:
+      - app
+    restart: unless-stopped
+
+  rabbitmq:
+    container_name: cr_rabbitmq
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-guest}
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5672:5672"
+    networks:
+      - app
+    restart: unless-stopped
+
+  postgres:
+    container_name: cr_db
+    image: postgres:16
+    env_file:
+      - backend/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  app:
+
+volumes:
+  postgres_data:
+    driver: local
