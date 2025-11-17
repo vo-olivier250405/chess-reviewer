@@ -30,6 +30,7 @@ def analyze_pgn(
                 f"{analyzer_api_url}/analyze/",
                 json={"pgn": pgn},
                 headers=headers,
+                timeout=120,  # 2 min
             )
             response.raise_for_status()
         except Exception as e:

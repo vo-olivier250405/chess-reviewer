@@ -1,5 +1,7 @@
 import pytest
+import secrets
 from unittest.mock import patch
+from unittest import TestCase
 from rest_framework.test import APIClient
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -16,12 +18,13 @@ User = get_user_model()
 
 
 @pytest.mark.django_db
-class TestGameAPI:
+class TestGameAPI(TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.client = APIClient()
+        test_password = secrets.token_urlsafe(16)
         self.user = User.objects.create_user(
-            username="testuser", password="password123"
+            username="testuser", password=test_password
         )
         self.token = AuthToken.objects.create(self.user)[1]
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token}")
@@ -52,7 +55,13 @@ class TestGameAPI:
             game_count_after = Game.objects.count()
             user_notifications_after = self.user.notifications.count()
 
-            assert response.status_code == 500
-            assert game_count_before == game_count_after
-            assert user_notifications_before == user_notifications_after
+            self.assertEqual(response.status_code, 500, "Expected status code 500")
+            self.assertEqual(
+                game_count_before, game_count_after, "Game count should not change"
+            )
+            self.assertEqual(
+                user_notifications_before,
+                user_notifications_after,
+                "Notification count should not change",
+            )
             mock_delay.assert_not_called()
