@@ -18,6 +18,14 @@ A project that analyzes chess games.
     - [Install RabbitMQ](#install-rabbitmq)
     - [Start RabbitMQ](#start-rabbitmq)
   - [Start Celery worker](#start-celery-worker)
+- [Databases Backup](#databases-backup)
+  - [Save](#save)
+  - [Clean and Load](#clean-and-load)
+- [Tests](#tests)
+- [Usage](#usage)
+  - [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+  - [Git Branching Strategy](#git-branching-strategy)
 
 ## Prerequisites
 
@@ -259,3 +267,79 @@ You can also clean the database and load a new database with one of your `SQL` f
 ```sh
 ./scripts/clean_load_db.sh ./path/to/your/sql-file.sql
 ```
+
+## Tests
+
+You can launch tests by running this command in `Docker`:
+
+```sh
+docker exec -it cr_api pytest --ds=app.settings
+```
+
+Or without `Docker` in your [backend folder](/backend/):
+
+```sh
+pytest --ds=app.settings
+```
+
+## Usage
+
+Once your services are up and running (API, Analyzer, Frontend, Celery, RabbitMQ), you can:
+
+1. Open the frontend in your browser (default port configured in `.env`, usually `http://localhost:5173` or the port you specified).
+2. Register a new user or login with existing credentials.
+3. Submit a chess game for analysis by either:
+   - Uploading a PGN file.
+   - Pasting a PGN directly into the analysis form.
+4. The backend will process your request asynchronously using Celery and RabbitMQ.
+5. Once the analysis is complete, check the results in your dashboard or game history.
+
+### API Endpoints
+
+Some main API endpoints:
+
+| Method | Endpoint              | Description                               |
+| ------ | --------------------- | ----------------------------------------- |
+| `POST` | `/api/games/analyze/` | Submit a PGN for analysis                 |
+| `GET`  | `/api/games/`         | List all games for the authenticated user |
+| `POST` | `/api/games/`         | Create a new game manually                |
+| `GET`  | `/api/games/<id>/`    | Retrieve game details                     |
+
+Authentication is via **Knox token**, set in the `Authorization` header:
+
+## Contributing
+
+We welcome contributions! Follow this guide to keep the project consistent and maintainable:
+
+### Git Branching Strategy
+
+1. `main`
+   - Always contains production-ready, fully tested code.
+2. `develop`
+   - Integration branch for features; contains code ready for QA or staging.
+3. `feature/<feature-name>`
+   - Each new feature branch is created from `develop`.
+   - Example: `feature/auth-system`
+
+**Workflow:**
+
+```text
+develop → feature/<feature-name> → develop → main
+```
+
+1. Create a new feature branch from develop
+
+```
+git checkout develop
+git pull origin develop
+git checkout -b feature/<feature-name>
+```
+
+2. Develop your feature and commit
+
+```
+git add .
+git commit -m "[ADD] => feature: <short description>"
+```
+
+3. Make the pull requests from your branch to develop
