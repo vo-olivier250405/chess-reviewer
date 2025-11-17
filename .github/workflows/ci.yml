@@ -30,4 +30,7 @@ jobs:
 
       - name: Run Django tests
         working-directory: backend
+        env:
+          DJANGO_SETTINGS_MODULE: app.settings
+          DATABASE_URL: "sqlite:///:memory:"
         run: pytest --ds=app.settings -v
