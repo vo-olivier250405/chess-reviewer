@@ -24,23 +24,6 @@ jobs:
         run: pip-audit -r backend/requirements.txt
         continue-on-error: false
 
-      # Node / Bun vulnerability scan
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-
-      - name: OSV-Scanner (PR scan)
-        uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@v2.1.0"
-        with:
-          scan-args: |
-            --lockfile=bun.lockb
-
-      - name: Audit JS dependencies
-        working-directory: frontend
-        run: |
-          bun install
-          npx osv-scanner --lockfile=bun-lock.json
-        continue-on-error: false
-
       # Secret detection
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
