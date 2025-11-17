@@ -28,11 +28,14 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
 
+      - name: Install OSV-Scanner
+        uses: google/osv-scanner-action@v1
+
       - name: Audit JS dependencies
         working-directory: frontend
         run: |
           bun install
-          npx osv-scanner --lockfile=package-lock.json
+          npx osv-scanner --lockfile=bun-lock.json
         continue-on-error: false
 
       # Secret detection
