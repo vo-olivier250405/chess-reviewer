@@ -18,7 +18,7 @@ jobs:
 
       #  Python dependency audit
       - name: Install pip-audit
-        run: pip install pip-audit
+        run: pip-audit -r backend/requirements.txt
 
       - name: Audit Python dependencies
         run: pip-audit
