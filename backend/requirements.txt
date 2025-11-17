@@ -33,6 +33,9 @@ pytest
 pytest-django
 bandit
 
+# Audit
+pip-audit
+safety
 
 # Queue and Task Management
 celery
