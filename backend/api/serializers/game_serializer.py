@@ -5,6 +5,7 @@ from api.validators import (
     validate_classifications,
     validate_accuracies,
     validate_positions,
+    validate_pgn,
 )
 
 
@@ -55,3 +56,6 @@ class GameCreateSerializer(BaseGameSerializer):
 class AnalyzeGameSerializer(serializers.Serializer):
     name = serializers.CharField(required=True)
     pgn = serializers.CharField(required=True)
+
+    def validate_pgn(self, value):
+        return validate_pgn(value)
