@@ -5,9 +5,11 @@ from rest_framework import status
 from api.models import User
 from api.serializers import UserSerializer, UserCreateSerializer
 from api.views import BaseViewSet
+from api.filters import UserFilter
 
 
 class UserViewSet(BaseViewSet):
+    filterset_class = UserFilter
 
     def get_serializer_class(self):
         if self.action in ["create", "register"]:

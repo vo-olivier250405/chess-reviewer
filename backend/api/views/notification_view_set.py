@@ -1,9 +1,11 @@
 from api.models import Notification
 from api.views import BaseViewSet
 from api.serializers import NotificationSerializer, NotificationUpdateSerializer
+from api.filters import NotificationFilter
 
 
 class NotificationViewSet(BaseViewSet):
+    filterset_class = NotificationFilter
 
     def get_serializer_class(self):
         if self.action in ["update", "partial_update"]:

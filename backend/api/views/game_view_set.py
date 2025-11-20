@@ -7,6 +7,7 @@ from api.serializers import (
     AnalyzeGameSerializer,
 )
 from api.tasks import analyze_pgn
+from api.filters import GameFilter
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
@@ -14,6 +15,7 @@ from os import environ
 
 
 class GameViewSet(BaseViewSet):
+    filterset_class = GameFilter
 
     def get_serializer_class(self):
         if self.action in ["create"]:
