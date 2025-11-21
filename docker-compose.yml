@@ -77,6 +77,19 @@ services:
     networks:
       - app
 
+  client:
+    container_name: cr_client
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 5173:5173
+    depends_on:
+      - api
+
 networks:
   app:
 
