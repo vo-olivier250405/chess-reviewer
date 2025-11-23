@@ -7,10 +7,15 @@ from api.models import User
 class UserSerializer(BaseSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "email"]
+        fields = [
+            "id",
+            "username",
+            # "email",
+        ]
 
 
 class UserCreateSerializer(UserSerializer):
+    # email = serializers.EmailField(required=True)
     token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -18,7 +23,7 @@ class UserCreateSerializer(UserSerializer):
         fields = [
             "id",
             "username",
-            "email",
+            # "email",
             "password",
             "token",
         ]
@@ -27,7 +32,7 @@ class UserCreateSerializer(UserSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(
             username=validated_data["username"],
-            email=validated_data["email"],
+            # email=validated_data["email"],
             password=validated_data["password"],
         )
         return user

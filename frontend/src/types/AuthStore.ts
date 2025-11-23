@@ -10,3 +10,9 @@ export interface AuthStore {
   clearAuth: () => void;
   refetch: () => Promise<void>;
 }
+
+export interface Auth {
+  token: string;
+  expiry: string;
+  user: User;
+}
