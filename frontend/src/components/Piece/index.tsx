@@ -4,18 +4,18 @@ import WhiteKing from "@/assets/king-w.svg?react";
 import BlackKing from "@/assets/king-b.svg?react";
 import React from "react";
 
-interface PieceProps {
+interface PieceProps extends React.HTMLAttributes<HTMLDivElement> {
   piece: PieceType;
 }
 
-const Piece: FC<PieceProps> = ({ piece }) => {
-  const PIECES: Record<string, FC<React.SVGProps<SVGSVGElement>>> = {
-    wk: WhiteKing,
-    bk: BlackKing,
-  };
+const PIECES: Record<string, FC<React.SVGProps<SVGSVGElement>>> = {
+  wk: WhiteKing,
+  bk: BlackKing,
+};
 
+const Piece: FC<PieceProps> = ({ piece, className }, ...props) => {
   return (
-    <div>
+    <div className={className} {...props}>
       {PIECES[`${piece.color}${piece.piece}`] &&
         React.createElement(PIECES[`${piece.color}${piece.piece}`])}
     </div>
