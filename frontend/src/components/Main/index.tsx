@@ -7,7 +7,7 @@ const Main: FC<MainProps> = ({ className, ...props }) => (
   <main
     {...props}
     className={cn(
-      "min-h-screen w-full text-slate-100 bg-slate-600 py-32",
+      "min-h-screen w-full text-slate-100 bg-slate-600 py-32 border-[12px] border-slate-800",
       className
     )}
   />
