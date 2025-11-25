@@ -13,7 +13,7 @@ export const Card: FC<CardProps> = ({
   className,
   title,
   children,
-  withHoverEffect = true,
+  withHoverEffect = false,
   ...props
 }) => {
   return (
@@ -42,11 +42,12 @@ export const Card: FC<CardProps> = ({
       )}
 
       <div
-        className="
-          relative flex flex-col gap-3
-          transition-transform duration-500 ease-in-out
-          group-hover:translate-x-14
-        "
+        className={cn(
+          "relative flex flex-col gap-3",
+          withHoverEffect
+            ? "transition-transform duration-500 ease-in-out group-hover:translate-x-14"
+            : ""
+        )}
       >
         <p className="text-green-200 font-bold text-xl">{title}</p>
         {children}
