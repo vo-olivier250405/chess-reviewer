@@ -57,6 +57,8 @@ interface Game {
 }
 
 interface AnalyzedGame {
+  id: string;
+  name: string;
   accuracies: {
     white: number;
     black: number;

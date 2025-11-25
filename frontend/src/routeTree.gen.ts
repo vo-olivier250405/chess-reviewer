@@ -14,6 +14,7 @@ import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as NotificationsIndexRouteImport } from './routes/notifications/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as GamesIndexRouteImport } from './routes/games/index'
+import { Route as GamesDetailRouteImport } from './routes/games/$detail'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,9 +41,15 @@ const GamesIndexRoute = GamesIndexRouteImport.update({
   path: '/games/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GamesDetailRoute = GamesDetailRouteImport.update({
+  id: '/games/$detail',
+  path: '/games/$detail',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/games/$detail': typeof GamesDetailRoute
   '/games': typeof GamesIndexRoute
   '/login': typeof LoginIndexRoute
   '/notifications': typeof NotificationsIndexRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/games/$detail': typeof GamesDetailRoute
   '/games': typeof GamesIndexRoute
   '/login': typeof LoginIndexRoute
   '/notifications': typeof NotificationsIndexRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/games/$detail': typeof GamesDetailRoute
   '/games/': typeof GamesIndexRoute
   '/login/': typeof LoginIndexRoute
   '/notifications/': typeof NotificationsIndexRoute
@@ -65,12 +74,25 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/games' | '/login' | '/notifications' | '/register'
+  fullPaths:
+    | '/'
+    | '/games/$detail'
+    | '/games'
+    | '/login'
+    | '/notifications'
+    | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/games' | '/login' | '/notifications' | '/register'
+  to:
+    | '/'
+    | '/games/$detail'
+    | '/games'
+    | '/login'
+    | '/notifications'
+    | '/register'
   id:
     | '__root__'
     | '/'
+    | '/games/$detail'
     | '/games/'
     | '/login/'
     | '/notifications/'
@@ -79,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GamesDetailRoute: typeof GamesDetailRoute
   GamesIndexRoute: typeof GamesIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   NotificationsIndexRoute: typeof NotificationsIndexRoute
@@ -122,11 +145,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GamesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/games/$detail': {
+      id: '/games/$detail'
+      path: '/games/$detail'
+      fullPath: '/games/$detail'
+      preLoaderRoute: typeof GamesDetailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GamesDetailRoute: GamesDetailRoute,
   GamesIndexRoute: GamesIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   NotificationsIndexRoute: NotificationsIndexRoute,

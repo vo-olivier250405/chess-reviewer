@@ -1,3 +1,4 @@
+import Main from "@/components/Main";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getRegisterMutation } from "@/hooks/mutations/registerMutation";
@@ -37,40 +38,43 @@ const Register: FC = () => {
   };
 
   return (
-    <form
-      onSubmit={handleRegister}
-      className="flex flex-col justify-between w-1/3 p-4 mx-auto mt-20 gap-4 border border-slate-300 rounded"
-    >
-      <div className="flex flex-col gap-2">
-        <Input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-        />
-        <Input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <Input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirm Password"
-        />
-      </div>
+    <Main className="bg-slate-100">
+      <form
+        onSubmit={handleRegister}
+        className="flex flex-col justify-between w-1/3 p-4 mx-auto mt-20 gap-4 border border-slate-300 rounded"
+      >
+        <div className="flex flex-col gap-2">
+          <Input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+          />
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
+          <Input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
+          />
+        </div>
 
-      <Button type="submit" className="mt-4">
-        Register
-      </Button>
+        <Button type="submit" className="mt-4">
+          Register
+        </Button>
 
-      <p className="text-slate-800 flex flex-col items-center">
-        Already have an account?
-        <Link to="/login" className="text-slate-500">
-          Log in
-        </Link>
-      </p>
-    </form>
+        <p className="text-slate-800 flex flex-col items-center">
+          Already have an account?
+          <Link to="/login" className="text-slate-500">
+            Log in
+          </Link>
+        </p>
+      </form>
+      );
+    </Main>
   );
 };

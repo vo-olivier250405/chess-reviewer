@@ -2,6 +2,7 @@ import { Toaster } from "sonner";
 import Header from "@/components/Header";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Footer } from "@/components/Footer";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +32,7 @@ export const OutletWrapper = () => (
     <Header />
     <Outlet />
     <Toaster position="bottom-center" richColors />
+    <Footer />
 
     {/* <TanstackDevtools
         config={{

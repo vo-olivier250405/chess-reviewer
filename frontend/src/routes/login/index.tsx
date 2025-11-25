@@ -6,6 +6,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { getLoginMutation } from "@/hooks/mutations/loginMutation";
 import { useState, type FC } from "react";
 import { toast } from "sonner";
+import Main from "@/components/Main";
 
 export const Route = createFileRoute("/login/")({
   component: () => <Login />,
@@ -39,34 +40,36 @@ const Login: FC = () => {
   };
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="flex flex-col justify-between w-1/3 p-4 mx-auto mt-20 gap-4 border border-slate-300 rounded"
-    >
-      <div className="flex flex-col gap-2">
-        <Input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-        />
-        <Input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-      </div>
+    <Main className="bg-slate-100">
+      <form
+        onSubmit={handleLogin}
+        className="flex flex-col justify-between w-1/3 p-4 mx-auto mt-20 gap-4 border border-slate-300 rounded bg-white text-slate-800"
+      >
+        <div className="flex flex-col gap-2">
+          <Input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+          />
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
+        </div>
 
-      <Button type="submit" className="mt-4">
-        Login
-      </Button>
+        <Button type="submit" className="mt-4">
+          Login
+        </Button>
 
-      <p className="text-slate-800 flex flex-col items-center">
-        Doesn't have an account?
-        <Link to="/register" className="text-slate-500">
-          Register
-        </Link>
-      </p>
-    </form>
+        <p className="text-slate-800 flex flex-col items-center">
+          Doesn't have an account?
+          <Link to="/register" className="text-slate-500">
+            Register
+          </Link>
+        </p>
+      </form>
+    </Main>
   );
 };

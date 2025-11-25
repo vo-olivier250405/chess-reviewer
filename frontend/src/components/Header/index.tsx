@@ -36,7 +36,7 @@ const Header: FC<HeaderProps> = ({ className }, ...props) => {
   return (
     <header
       className={cn(
-        "bg-slate-800 text-slate-200 p-8 flex flex-row justify-between items-center",
+        "bg-slate-800 text-slate-200 p-8 flex flex-row justify-between items-center fixed top-0 left-0 w-full z-10",
         className
       )}
       {...props}

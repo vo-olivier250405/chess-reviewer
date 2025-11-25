@@ -12,7 +12,7 @@ function App() {
   return (
     <Main>
       {user ? (
-        <p className="text-4xl text-slate-800 p-4 font-bold w-full text-center py-8">
+        <p className="text-4xl text-slate-200 p-4 font-bold w-full text-center py-8">
           Welcome, {user.username} !
         </p>
       ) : null}
