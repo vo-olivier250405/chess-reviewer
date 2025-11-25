@@ -9,7 +9,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { getLogoutMutation } from "@/hooks/mutations/logoutMutation";
+import { getLogoutMutation } from "@/lib/options/mutations/logoutMutation";
 import { toast } from "sonner";
 import { Crown, LogOut } from "lucide-react";
 import { Route } from "@/routes/__root";

@@ -5,9 +5,9 @@ from rest_framework.exceptions import ValidationError
 
 
 class BaseViewSetPagination(PageNumberPagination):
-    page_size = 5
+    page_size = 9
     page_size_query_param = "page_size"
-    max_page_size = 5
+    max_page_size = 9
     django_paginator_class = Paginator
 
     def get_page_size(self, request):

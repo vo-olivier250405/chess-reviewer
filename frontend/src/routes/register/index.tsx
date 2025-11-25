@@ -1,7 +1,7 @@
 import Main from "@/components/Main";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getRegisterMutation } from "@/hooks/mutations/registerMutation";
+import { getRegisterMutation } from "@/lib/options/mutations/registerMutation";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FC } from "react";

@@ -48,7 +48,7 @@ export const Card: FC<CardProps> = ({
           group-hover:translate-x-14
         "
       >
-        <p className="text-green-200 font-bold text-2xl">{title}</p>
+        <p className="text-green-200 font-bold text-xl">{title}</p>
         {children}
       </div>
     </div>
