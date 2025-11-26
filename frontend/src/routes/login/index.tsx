@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import useAuth from "@/stores/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getLoginMutation } from "@/lib/optionsp/mutations/loginMutation";
+import { getLoginMutation } from "@/lib/options/mutations/loginMutation";
 import { useState, type FC } from "react";
 import { toast } from "sonner";
 import Main from "@/components/Main";

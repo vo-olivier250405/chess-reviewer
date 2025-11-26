@@ -12,4 +12,7 @@ def validate_redirection(value):
         if not isinstance(value["search_params"], dict):
             raise ValidationError("Redirection.search_params must be a dict ")
 
+    if "label" in value:
+        if not isinstance(value["label"], str):
+            raise ValidationError("Redirection.label must be a string ")
     return value
