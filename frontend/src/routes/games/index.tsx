@@ -1,11 +1,13 @@
 import { Card } from "@/components/Card";
 import Main from "@/components/Main";
+import { Pagination } from "@/components/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getListGameQueryOptions } from "@/lib/options/queries/listGames";
 import useAuth from "@/stores/useAuth";
 import type { AnalyzedGame } from "@/types/Game";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute("/games/")({
   component: RouteComponent,
@@ -13,7 +15,14 @@ export const Route = createFileRoute("/games/")({
 
 function RouteComponent() {
   const { user } = useAuth();
-  const query = useQuery(getListGameQueryOptions(user!));
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const query = useQuery(getListGameQueryOptions(user!, currentPage));
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <Main>
@@ -32,35 +41,43 @@ function RouteComponent() {
               </Skeleton>
             ))}
         </div>
-      ) : !!query.data ? (
-        <div className="md:grid md:grid-cols-3">
-          {query.data.map((game: AnalyzedGame) => (
-            <Link
-              to="/games/$detail"
-              params={{ detail: game.id }}
-              key={game.id}
-            >
-              <Card
-                withHoverEffect
-                title={game.name}
-                className="m-4 bg-slate-700/60 hover:bg-slate-700 transition-all ease-in-out"
+      ) : !!query.data?.data ? (
+        <>
+          <div className="md:grid md:grid-cols-3">
+            {query.data?.data.data.map((game: AnalyzedGame) => (
+              <Link
+                to="/games/$detail"
+                params={{ detail: game.id }}
+                key={game.id}
               >
-                <span className="text-red-400 flex flex-row gap-2 items-center">
-                  Black Accuracy:
-                  <p className="font-bold text-md">
-                    {Math.floor(game.accuracies.black)}%
-                  </p>
-                </span>
-                <span className="text-green-400 flex flex-row gap-2 items-center">
-                  White Accuracy:
-                  <p className="font-bold text-md">
-                    {Math.floor(game.accuracies.white)}%
-                  </p>
-                </span>
-              </Card>
-            </Link>
-          ))}
-        </div>
+                <Card
+                  withHoverEffect
+                  title={game.name}
+                  className="m-4 bg-slate-700/60 hover:bg-slate-700 transition-all ease-in-out"
+                >
+                  <span className="text-red-400 flex flex-row gap-2 items-center">
+                    Black Accuracy:
+                    <p className="font-bold text-md">
+                      {Math.floor(game.accuracies.black)}%
+                    </p>
+                  </span>
+                  <span className="text-green-400 flex flex-row gap-2 items-center">
+                    White Accuracy:
+                    <p className="font-bold text-md">
+                      {Math.floor(game.accuracies.white)}%
+                    </p>
+                  </span>
+                </Card>
+              </Link>
+            ))}
+          </div>
+
+          <Pagination
+            query={query}
+            onPageChange={handlePageChange}
+            className="absolute bottom-0"
+          />
+        </>
       ) : (
         <p>No games found.</p>
       )}
