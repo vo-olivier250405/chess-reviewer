@@ -28,7 +28,7 @@ class GameViewSet(BaseViewSet):
 
     def get_queryset(self):
         if self.user:
-            return Game.objects.all().filter(user=self.user)
+            return Game.objects.all().filter(user=self.user).order_by("-created_at")
         return Game.objects.none()
 
     @action(detail=False, methods=["post"])
