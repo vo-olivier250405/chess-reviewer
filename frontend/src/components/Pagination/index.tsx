@@ -1,21 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { PaginatedResponse } from "@/types/PaginatedResponse";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { FC, HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 
-interface PaginationProps extends HTMLAttributes<HTMLDivElement> {
-  query: UseQueryResult<any, unknown>;
+interface PaginationProps<T> extends HTMLAttributes<HTMLDivElement> {
+  query: UseQueryResult<PaginatedResponse<T>, unknown>;
   onPageChange: (page: number) => void;
 }
 
-export const Pagination: FC<PaginationProps> = ({
+export const Pagination = <T,>({
   query,
   onPageChange,
   className,
   ...props
-}) => {
-  const data = query.data?.data;
+}: PaginationProps<T>) => {
+  const data = query.data;
 
   if (!data || !data.pager) {
     return null;
@@ -123,7 +124,7 @@ export const Pagination: FC<PaginationProps> = ({
       </Button>
 
       <span className="ml-4 text-sm text-gray-500">
-        Page {current} sur {total}
+        Page {current} of {total}
       </span>
     </div>
   );

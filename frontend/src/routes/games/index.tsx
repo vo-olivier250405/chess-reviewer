@@ -41,10 +41,10 @@ function RouteComponent() {
               </Skeleton>
             ))}
         </div>
-      ) : !!query.data?.data ? (
+      ) : !!query.data ? (
         <>
           <div className="md:grid md:grid-cols-3">
-            {query.data?.data.data.map((game: AnalyzedGame) => (
+            {query.data.data.map((game: AnalyzedGame) => (
               <Link
                 to="/games/$detail"
                 params={{ detail: game.id }}
