@@ -34,16 +34,21 @@ function App() {
         to: "/games/analysis",
         state: { data: analyzedGame } as {},
       });
+      setPgn("");
+      setName("");
     },
     onError: (error) => toast.error(error.message),
   });
 
   const sendGameMutation = useMutation({
     ...getSendGameMutation(pgn, name),
-    onSuccess: () =>
+    onSuccess: () => {
       toast.success(
         "Game is sent for analysis! You will be notified when it's done."
-      ),
+      );
+      setPgn("");
+      setName("");
+    },
     onError: (error) => toast.error(error.message),
   });
 
@@ -55,8 +60,6 @@ function App() {
     if (!name.trim() && user) return toast.error("Please enter a game name.");
 
     mutationToUse.mutate();
-    setName("");
-    setPgn("");
   };
 
   return (
@@ -70,11 +73,11 @@ function App() {
           mutationToUse.isPending && "animate-pulse"
         )}
       >
-        {mutationToUse.isPending && !user
+        {mutationToUse.isPending
           ? "Processing your game, please wait..."
           : " You can paste your PGN below to analyze your game."}
       </p>
-      {mutationToUse.isPending && !user ? (
+      {mutationToUse.isPending ? (
         <Loader className="animate-spin size-7" />
       ) : (
         <form className="flex flex-col gap-4 p-4 w-1/2" onSubmit={handleSubmit}>
