@@ -64,12 +64,22 @@ function App() {
 
   return (
     <Main className="flex flex-col justify-center items-center size-full">
-      <p className="text-4xl text-slate-200 p-4 font-bold w-full text-center py-8">
-        {user ? `Welcome, ${user.username} !` : "Welcome to Chess Reviewer!"}
-      </p>
+      <span className="text-4xl text-neutral-100 p-4 font-bold w-full text-center py-8">
+        {user ? (
+          <span className="flex flex-row items-center justify-center gap-2">
+            Welcome back,
+            <p className="text-primary-500">{user.username}</p>!
+          </span>
+        ) : (
+          <span className="flex flex-row items-center justify-center gap-2">
+            Welcome to
+            <p className="text-primary-500">Chess Reviewer</p>!
+          </span>
+        )}
+      </span>
       <p
         className={cn(
-          "font-bold my-4 text-green-300 text-center",
+          "font-bold mt-2 mb-4 text-primary-100 text-center text-xl",
           mutationToUse.isPending && "animate-pulse"
         )}
       >
@@ -89,7 +99,7 @@ function App() {
             />
           )}
           <textarea
-            className="flex-1 p-4 rounded-md bg-slate-700 text-slate-100 min-h-[200px] md:min-h-[400px]"
+            className="flex-1 p-4 rounded-md bg-primary-300 text-neutral-700 min-h-[200px] md:min-h-[400px] placeholder:text-neutral-700/25"
             placeholder="Paste your PGN here..."
             value={pgn}
             onChange={(e) => setPgn(e.target.value)}
@@ -97,7 +107,7 @@ function App() {
 
           <div className="flex flex-col gap-4 w-fit">
             <Button
-              className="bg-green-500 hover:bg-green-300 text-slate-900 hover:text-slate-700 transition-all ease-in-out"
+              className="bg-primary-700 hover:bg-primary-500 text-neutral-100 hover:text-neutral-700 transition-all ease-in-out"
               disabled={mutationToUse.isPending || !pgn.trim()}
               type="submit"
             >

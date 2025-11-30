@@ -36,7 +36,7 @@ const Header: FC<HeaderProps> = ({ className }, ...props) => {
   return (
     <header
       className={cn(
-        "bg-slate-800 text-slate-200 p-8 flex flex-row justify-between items-center fixed top-0 left-0 w-full z-10",
+        "bg-neutral-700 text-neutral-100 p-8 flex flex-row justify-between items-center fixed top-0 left-0 w-full z-10",
         className
       )}
       {...props}
@@ -47,13 +47,13 @@ const Header: FC<HeaderProps> = ({ className }, ...props) => {
           <div className="flex flex-row gap-2">
             <Link
               to="/games"
-              className="p-4 rounded-md hover:bg-slate-900 transition-all ease-in-out"
+              className="p-4 rounded-md hover:bg-neutral-900 transition-all ease-in-out"
             >
               <Crown className="size-5 text-green-400" />
             </Link>
             <NotificationsLink />
             <DropdownMenu>
-              <DropdownMenuTrigger className="p-4 rounded-md hover:bg-slate-900 transition-all ease-in-out">
+              <DropdownMenuTrigger className="p-4 rounded-md hover:bg-neutral-900 transition-all ease-in-out">
                 {user.username}
               </DropdownMenuTrigger>
               <DropdownMenuContent>
