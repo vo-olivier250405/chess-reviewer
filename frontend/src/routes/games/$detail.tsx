@@ -24,7 +24,7 @@ function RouteComponent() {
       </div>
 
       {query.isLoading ? (
-        <Skeleton className="m-4 h-[calc(100vh-16.2rem)] flex-1" />
+        <Skeleton className="m-4 h-[calc(100vh-16.2rem)] flex-1 bg-neutral-700/50" />
       ) : query.isError ? (
         <p className="text-destructive">
           {query.error?.message || "Error loading game details."}

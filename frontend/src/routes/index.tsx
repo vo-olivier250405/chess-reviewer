@@ -93,6 +93,7 @@ function App() {
         <form className="flex flex-col gap-4 p-4 w-1/2" onSubmit={handleSubmit}>
           {user && (
             <Input
+              className="bg-neutral-100 text-neutral-900"
               placeholder="Enter the game name"
               value={name}
               onChange={(e) => setName(e.target.value)}

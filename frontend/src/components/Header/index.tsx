@@ -49,7 +49,7 @@ const Header: FC<HeaderProps> = ({ className }, ...props) => {
               to="/games"
               className="p-4 rounded-md hover:bg-neutral-900 transition-all ease-in-out"
             >
-              <Crown className="size-5 text-green-400" />
+              <Crown className="size-5 text-primary-400" />
             </Link>
             <NotificationsLink />
             <DropdownMenu>

@@ -29,7 +29,7 @@ export const Card: FC<CardProps> = ({
         <div
           className="
           absolute top-0 left-0 h-full 
-          bg-slate-800
+          bg-neutral-700
           flex items-center pl-3
           w-5/6
           -translate-x-full
@@ -49,7 +49,7 @@ export const Card: FC<CardProps> = ({
             : ""
         )}
       >
-        <p className="text-green-200 font-bold text-xl">{title}</p>
+        <p className="text-primary-300 font-bold text-xl">{title}</p>
         {children}
       </div>
     </div>

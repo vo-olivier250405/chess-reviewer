@@ -35,9 +35,9 @@ function RouteComponent() {
           {Array(9)
             .fill(null)
             .map((_, i) => (
-              <Skeleton key={i} className="m-4 h-20 p-4 bg-slate-400">
-                <Skeleton className="h-6 w-1/3 mb-2 bg-slate-500" />
-                <Skeleton className="h-4 w-full bg-slate-500" />
+              <Skeleton key={i} className="m-4 h-20 p-4 bg-neutral-400">
+                <Skeleton className="h-6 w-1/3 mb-2 bg-neutral-500" />
+                <Skeleton className="h-4 w-full bg-neutral-500" />
               </Skeleton>
             ))}
         </div>
@@ -53,18 +53,18 @@ function RouteComponent() {
                 <Card
                   withHoverEffect
                   title={game.name}
-                  className="m-4 bg-slate-700/60 hover:bg-slate-700 transition-all ease-in-out"
+                  className="m-4 bg-neutral-700/50 hover:bg-neutral-700/60 transition-all ease-in-out"
                 >
-                  <span className="text-red-400 flex flex-row gap-2 items-center">
-                    Black Accuracy:
-                    <p className="font-bold text-md">
-                      {Math.floor(game.accuracies.black)}%
-                    </p>
-                  </span>
-                  <span className="text-green-400 flex flex-row gap-2 items-center">
+                  <span className="text-primary-100 flex flex-row gap-2 items-center">
                     White Accuracy:
                     <p className="font-bold text-md">
                       {Math.floor(game.accuracies.white)}%
+                    </p>
+                  </span>
+                  <span className="text-neutral-400 flex flex-row gap-2 items-center">
+                    Black Accuracy:
+                    <p className="font-bold text-md">
+                      {Math.floor(game.accuracies.black)}%
                     </p>
                   </span>
                 </Card>

@@ -38,24 +38,27 @@ const Register: FC = () => {
   };
 
   return (
-    <Main className="bg-slate-100">
+    <Main>
       <form
         onSubmit={handleRegister}
-        className="flex flex-col justify-between w-1/3 p-4 mx-auto mt-20 gap-4 border border-slate-300 rounded"
+        className="flex flex-col justify-between w-1/2 p-10 mx-auto mt-20 gap-4 rounded bg-neutral-700 text-neutral-100"
       >
         <div className="flex flex-col gap-2">
           <Input
+            className="bg-neutral-100 py-6 text-neutral-900"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
           />
           <Input
+            className="bg-neutral-100 py-6 text-neutral-900"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
           />
           <Input
+            className="bg-neutral-100 py-6 text-neutral-900"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -63,18 +66,19 @@ const Register: FC = () => {
           />
         </div>
 
-        <Button type="submit" className="mt-4">
-          Register
-        </Button>
+        <div className="flex flex-row gap-2 items-center justify-between">
+          <Button type="submit" className="w-fit">
+            Register
+          </Button>
 
-        <p className="text-slate-800 flex flex-col items-center">
-          Already have an account?
-          <Link to="/login" className="text-slate-500">
-            Log in
-          </Link>
-        </p>
+          <p className="text-neutral-100 flex flex-row items-center">
+            Already have an account?
+            <Link to="/login" className="ml-2 text-primary-200">
+              Log in
+            </Link>
+          </p>
+        </div>
       </form>
-      );
     </Main>
   );
 };
