@@ -16,8 +16,8 @@ function RouteComponent() {
   const { data } = state;
   return (
     <Main className="flex md:flex-row flex-col gap-4">
-      <Link to="/" className="-mt-4 ml-4 bg-slate-700 h-fit p-2 rounded-md">
-        <ChevronLeft />
+      <Link to="/" className="ml-4 mb-4 bg-neutral-700 hover:bg-neutral-600 h-fit w-fit p-2 rounded-md flex items-center gap-2 text-neutral-100 transition-all">
+        <ChevronLeft className="size-5" />
       </Link>
       {data && (
         <>

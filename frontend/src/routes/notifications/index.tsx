@@ -6,6 +6,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import type { Notification } from "@/types/Notification";
 import api from "@/lib/axios";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChevronLeft } from "lucide-react";
 
 export const Route = createFileRoute("/notifications/")({
   component: RouteComponent,
@@ -21,6 +22,9 @@ function RouteComponent() {
 
   return (
     <Main>
+      <Link to="/" className="ml-4 mb-4 bg-neutral-700 hover:bg-neutral-600 h-fit w-fit p-2 rounded-md flex items-center gap-2 text-neutral-100 transition-all">
+        <ChevronLeft className="size-5" />
+      </Link>
       {query.isLoading ? (
         <div className="md:grid md:grid-cols-1">
           {Array(6)

@@ -8,6 +8,7 @@ import type { AnalyzedGame } from "@/types/Game";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { ChevronLeft } from "lucide-react";
 
 export const Route = createFileRoute("/games/")({
   component: RouteComponent,
@@ -26,6 +27,9 @@ function RouteComponent() {
 
   return (
     <Main>
+      <Link to="/" className="ml-4 mb-4 bg-neutral-700 hover:bg-neutral-600 h-fit w-fit p-2 rounded-md flex items-center gap-2 text-neutral-100 transition-all">
+        <ChevronLeft className="size-5" />
+      </Link>
       {query.isError ? (
         <p className="text-destructive">
           {query.error?.message || "Error loading games."}

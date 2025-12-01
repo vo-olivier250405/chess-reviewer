@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import Main from "@/components/Main";
 import { useQuery } from "@tanstack/react-query";
 import { getDetailGameOptions } from "@/lib/options/queries/detailGame";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Construction } from "lucide-react";
+import { ChevronLeft, Construction } from "lucide-react";
 import { DisplayAnalysis } from "@/components/DisplayAnalysis";
 
 export const Route = createFileRoute("/games/$detail")({
@@ -16,6 +16,9 @@ function RouteComponent() {
 
   return (
     <Main className="flex md:flex-row flex-col gap-4">
+      <Link to="/games" className="ml-4 mb-4 bg-neutral-700 hover:bg-neutral-600 h-fit w-fit p-2 rounded-md flex items-center gap-2 text-neutral-100 transition-all">
+        <ChevronLeft className="size-5" />
+      </Link>
       <div className="md:w-1/2 w-full">
         <Skeleton className="h-[calc(100vh-16.2rem)] bg-orange-200 text-orange-400 items-center text-center flex flex-col gap-4 justify-center m-4">
           <Construction className="size-24" />
