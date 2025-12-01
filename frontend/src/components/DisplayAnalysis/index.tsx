@@ -10,16 +10,23 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 export interface DisplayAnalysisProps
   extends React.HTMLAttributes<HTMLDivElement> {
   data: AnalyzedGame;
+  onPositionChange?: (index: number) => void;
 }
 
 export const DisplayAnalysis: FC<DisplayAnalysisProps> = ({
   data,
   className,
+  onPositionChange,
   ...props
 }) => {
   const { positions, accuracies, classifications } = data;
   const [currentIdx, setCurrentIdx] = useState(0);
   const currentPosition = positions[currentIdx];
+
+  const handleIndexChange = (newIdx: number) => {
+    setCurrentIdx(newIdx);
+    onPositionChange?.(newIdx);
+  };
 
   const totalAccuracy = accuracies.white + accuracies.black;
   const whitePercent = totalAccuracy
@@ -73,13 +80,13 @@ export const DisplayAnalysis: FC<DisplayAnalysisProps> = ({
         <div className="flex flex-row gap-3 mt-4">
           <Button
             disabled={currentIdx === 0}
-            onClick={() => setCurrentIdx(currentIdx - 1)}
+            onClick={() => handleIndexChange(currentIdx - 1)}
           >
             <ChevronLeft className="size-5" />
           </Button>
           <Button
             disabled={currentIdx === positions.length - 1}
-            onClick={() => setCurrentIdx(currentIdx + 1)}
+            onClick={() => handleIndexChange(currentIdx + 1)}
           >
             <ChevronRight className="size-5" />
           </Button>

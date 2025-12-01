@@ -3,8 +3,10 @@ import Main from "@/components/Main";
 import { useQuery } from "@tanstack/react-query";
 import { getDetailGameOptions } from "@/lib/options/queries/detailGame";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, Construction } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { DisplayAnalysis } from "@/components/DisplayAnalysis";
+import { Visualizer } from "@/components/Visualizer";
+import { useState } from "react";
 
 export const Route = createFileRoute("/games/$detail")({
   component: RouteComponent,
@@ -13,6 +15,7 @@ export const Route = createFileRoute("/games/$detail")({
 function RouteComponent() {
   const { detail: id } = Route.useParams();
   const query = useQuery(getDetailGameOptions(id));
+  const [currentPositionIdx, setCurrentPositionIdx] = useState(0);
 
   return (
     <Main className="flex md:flex-row flex-col gap-4">
@@ -23,10 +26,15 @@ function RouteComponent() {
         <ChevronLeft className="size-5" />
       </Link>
       <div className="md:w-1/2 w-full">
-        <Skeleton className="h-[calc(100vh-16.2rem)] bg-orange-200 text-orange-400 items-center text-center flex flex-col gap-4 justify-center m-4">
-          <Construction className="size-24" />
-          <p className="font-bold text-3xl">IN PROGRESS</p>
-        </Skeleton>
+        {query.data && (
+          <Visualizer
+            fen={
+              query.data.positions[currentPositionIdx]?.fen ||
+              "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+            }
+            className="h-[calc(100vh-16.2rem)] m-4"
+          />
+        )}
       </div>
 
       {query.isLoading ? (
@@ -39,6 +47,7 @@ function RouteComponent() {
         <DisplayAnalysis
           className="flex-1 m-4 h-[calc(100vh-10rem)]"
           data={query.data}
+          onPositionChange={setCurrentPositionIdx}
         />
       ) : null}
     </Main>

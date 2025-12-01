@@ -2,8 +2,9 @@ import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
 import Main from "@/components/Main";
 import { DisplayAnalysis } from "@/components/DisplayAnalysis";
 import type { AnalyzedGame } from "@/types/Game";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, Construction } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { Visualizer } from "@/components/Visualizer";
+import { useState } from "react";
 
 export const Route = createFileRoute("/games/analysis/")({
   component: RouteComponent,
@@ -14,6 +15,8 @@ function RouteComponent() {
     data?: AnalyzedGame;
   };
   const { data } = state;
+  const [currentPositionIdx, setCurrentPositionIdx] = useState(0);
+
   return (
     <Main className="flex md:flex-row flex-col gap-4">
       <Link
@@ -25,15 +28,19 @@ function RouteComponent() {
       {data && (
         <>
           <div className="md:w-1/2 w-full">
-            <Skeleton className="h-[calc(100vh-16.2rem)] bg-orange-200 text-orange-400 items-center text-center flex flex-col gap-4 justify-center m-4">
-              <Construction className="size-24" />
-              <p className="font-bold text-3xl">IN PROGRESS</p>
-            </Skeleton>
+            <Visualizer
+              fen={
+                data.positions[currentPositionIdx]?.fen ||
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+              }
+              className="h-[calc(100vh-16.2rem)] m-4"
+            />
           </div>
 
           <DisplayAnalysis
             className="flex-1 m-4 h-[calc(100vh-10rem)]"
             data={data}
+            onPositionChange={setCurrentPositionIdx}
           />
         </>
       )}
