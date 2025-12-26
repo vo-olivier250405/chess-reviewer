@@ -5,6 +5,7 @@ import type { AnalyzedGame } from "@/types/Game";
 import { ChevronLeft } from "lucide-react";
 import { Visualizer } from "@/components/Visualizer";
 import { useState } from "react";
+import { FIRST_POSITION_FEN } from "@/constants";
 
 export const Route = createFileRoute("/games/analysis/")({
   component: RouteComponent,
@@ -30,8 +31,7 @@ function RouteComponent() {
           <div className="md:w-1/2 w-full">
             <Visualizer
               fen={
-                data.positions[currentPositionIdx]?.fen ||
-                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+                data.positions[currentPositionIdx]?.fen || FIRST_POSITION_FEN
               }
               className="h-[calc(100vh-16.2rem)] m-4"
             />

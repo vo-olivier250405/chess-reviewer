@@ -14,3 +14,6 @@ export const MODES: SearchModeOption[] = [
     value: "pgn",
   },
 ];
+
+export const FIRST_POSITION_FEN =
+  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";

@@ -7,6 +7,7 @@ import { ChevronLeft } from "lucide-react";
 import { DisplayAnalysis } from "@/components/DisplayAnalysis";
 import { Visualizer } from "@/components/Visualizer";
 import { useState } from "react";
+import { FIRST_POSITION_FEN } from "@/constants";
 
 export const Route = createFileRoute("/games/$detail")({
   component: RouteComponent,
@@ -30,7 +31,7 @@ function RouteComponent() {
           <Visualizer
             fen={
               query.data.positions[currentPositionIdx]?.fen ||
-              "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+              FIRST_POSITION_FEN
             }
             className="h-[calc(100vh-16.2rem)] m-4"
           />
