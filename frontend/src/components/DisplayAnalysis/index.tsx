@@ -6,6 +6,7 @@ import { useState, type FC } from "react";
 import { Card } from "../Card";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import useArrowNavigation from "@/hooks/useArrowNavigation";
 
 export interface DisplayAnalysisProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -24,9 +25,16 @@ export const DisplayAnalysis: FC<DisplayAnalysisProps> = ({
   const currentPosition = positions[currentIdx];
 
   const handleIndexChange = (newIdx: number) => {
-    setCurrentIdx(newIdx);
-    onPositionChange?.(newIdx);
+    if (0 <= newIdx && newIdx < positions.length) {
+      setCurrentIdx(newIdx);
+      onPositionChange?.(newIdx);
+    }
   };
+
+  useArrowNavigation({
+    handleLeft: () => handleIndexChange(currentIdx - 1),
+    handleRight: () => handleIndexChange(currentIdx + 1),
+  });
 
   const totalAccuracy = accuracies.white + accuracies.black;
   const whitePercent = totalAccuracy
